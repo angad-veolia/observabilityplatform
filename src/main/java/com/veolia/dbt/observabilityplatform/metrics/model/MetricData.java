@@ -1,36 +1,28 @@
 package com.veolia.dbt.observabilityplatform.metrics.model;
 
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
-@Entity //we will mark this class as an entity to be persisted in the database
-@Table(name = "metric_data") //if not specified, the table name will be the class name
-@Data // use Lombok to generate getters, setters, toString, equals, and hashCode methods
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MetricData {
-
-    @Id // this field will be the primary key
-    @Column(nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-generate the ID value
-    //strategy here is set to IDENTITY, which means the database will generate a unique value for this field
-    private Long id;
-    
-    @Column(nullable = false)
+    @Builder.Default
+    private String id = UUID.randomUUID().toString();
+    private MonitoredResource resource;
     private String metricName;
-    
-    @Column(nullable = false)
-    private String resourceId;
-    
-    @Column(nullable = false)
     private Double value;
-    
-    @Column(nullable = false)
     private Instant timestamp;
-    
-    @Column
     private String unit;
-    
-    @Column
-    private String namespace;
+    @Builder.Default
+    private Map<String, String> labels = new HashMap<>();
     
 }
