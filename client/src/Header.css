@@ -1,0 +1,125 @@
+/* Header.css */
+.header {
+    background-color: #192841;
+    padding: 0 20px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+   
+}
+
+.hamburger-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    margin-right: 20px;
+}
+
+.bar {
+    width: 22px;
+    height: 2px;
+    background-color: white;
+    border-radius: 1px;
+}
+
+.logo-container {
+    background: none;
+    display: flex;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    align-items: center;
+}
+
+.logoVeolia2 {
+    height: 40px;
+    width: auto;
+    border-radius: 20px;
+    object-fit: contain;
+}
+
+
+.logoutButton {
+    height: 40px; /* made smaller */
+    width: auto;
+    margin: 5px;
+    object-fit: contain;
+    
+}
+
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 8px 15px;
+    border-radius: 20px;
+    margin: right;
+    cursor: pointer;
+}
+
+.spacer {
+    flex: 1; /* This creates a flexible space that pushes the user profile right */
+}
+
+.button {
+    opacity: 0;
+}
+.user-icon {
+    width: 24px;
+    height: 24px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.user-name {
+    color: white;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+
+.nav-menu {
+    position: fixed;
+    left: -250px; /* Start off-screen */
+    top: 60px; /* Height of your header */
+    width: 250px;
+    height: calc(100vh - 60px);
+    background-color: #23395D;
+    transition: left 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+
+.nav-menu.nav-open {
+    left: 0;
+}
+
+.nav-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-menu li {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    display: block;
+}
+
+.nav-menu li:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+

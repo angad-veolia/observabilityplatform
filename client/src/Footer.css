@@ -1,0 +1,20 @@
+/* Footer.css */
+.footer {
+    background-color: #192841; /* same as header */
+    color: white;
+    padding: 15px 20px;
+    position: fixed; /* keeps footer at bottom */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 15px; /* adjust height as needed */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-content {
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+

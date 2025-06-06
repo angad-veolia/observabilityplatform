@@ -1,0 +1,11 @@
+.main-content {
+    min-height: 120vh; /* Makes the content taller than viewport */
+}
+
+.welcomeMessage {
+  color: #192841;
+  font-size: 40px;
+  font-weight: bold;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
