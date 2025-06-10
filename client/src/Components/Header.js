@@ -46,6 +46,7 @@ function Header() {
                 < ul >
                     < li ><a href="/">Home</a></li>
                     < li ><a href="/dashboard">Application View</a></li>
+                    < li ><a href="/reports">Cluster View</a></li>
                     < li ><a href="/reports">My Favorite</a></li>
                 </ul>
         </nav>

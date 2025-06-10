@@ -1,21 +1,15 @@
-
-import Header from './src/Header';
-import Footer from './src/Footer';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import './App.css';
-import SignIn from './src/SignInPage';
-import MainPage from './src/MainPage'; // Your existing page
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import SignInPage from './Components/SignInPage';
+import MainPage from './Components/MainPage';
 
 function App() {
-   return (
-    < Router >
-            < Routes >
-                <Route path="/" element={<SignIn />} />
-                <Route path="/main" element={<MainPage />} />
-                <Route path="*" element={<Navigate to="/" />} />
-            </Routes>
-        </Router>        
-    );
+  return (
+    < Routes >
+      <Route path="/" element={<MainPage/>} />
+      <Route path="/signin" element={<SignInPage/>} />
+    </Routes>
+  );
 }
 
 export default App;

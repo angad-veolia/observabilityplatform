@@ -1,27 +1,24 @@
 // SignInPage.js
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SignInPage.css';
-import logoVeolia2 from './logoVeolia2.png'; // Make sure to import your logo
 
 function SignInPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate();
+    const navigate = useNavigate();  // Add this hook
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Add your authentication logic here
+        console.log('Form submitted');
         if (username && password) {
-            // If login successful, navigate to main page
-            navigate('/main');
+            navigate('/main');  // This will navigate to MainPage
         }
     };
 
     return (
         <div className="signin-container">
             <div className="signin-box">
-                <img src={logoVeolia2} alt="Veolia" className="signin-logo" />
                 < h2 >Sign In</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="input-group">
