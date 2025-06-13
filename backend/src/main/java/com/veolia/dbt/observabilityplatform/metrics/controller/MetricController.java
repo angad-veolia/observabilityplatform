@@ -85,6 +85,35 @@ public class MetricController {
         return ResponseEntity.ok(latestMetrics);
     }
 
+    //Triger further for a dynamic url
+    /**
+     * Get all metrics for a specific application 
+     */
+    @GetMapping("/application/{appName}/all")
+    public ResponseEntity<List< MetricData >> getApplicationMetrics(@PathVariable String appName) {
+        List< MetricData > metrics = metricService.getMetricsForApplication(appName);
+        return ResponseEntity.ok(metrics);
+    }
+
+    /**
+     * Get latest metrics for a specific application
+     */
+    @GetMapping("/application/{appName}/latest")
+    public ResponseEntity<Map<String, MetricData>> getLatestApplicationMetrics(@PathVariable String appName) {
+        Map<String, MetricData> latestMetrics = metricService.getLatestMetricsForApplication(appName);
+        return ResponseEntity.ok(latestMetrics);
+    }
+
+    /**
+     * Get health status for a specific application
+     */
+    @GetMapping("/application/{appName}/health")
+    public ResponseEntity<Map<String, Object>> getApplicationHealth(@PathVariable String appName) {
+        Map<String, Object> healthStatus = metricService.getApplicationHealthStatus(appName);
+        return ResponseEntity.ok(healthStatus);
+    }
+
+
     /**
      * Manually trigger metrics collection
      */

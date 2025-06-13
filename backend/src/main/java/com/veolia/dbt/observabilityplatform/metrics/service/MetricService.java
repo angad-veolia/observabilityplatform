@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class MetricService {
@@ -84,6 +85,125 @@ public class MetricService {
         
         return latestMetrics;
     }
+
+    //For Nagios Implementation!!
+    
+        /**
+         * Get metrics for a specific application
+         */
+        public List< MetricData > getMetricsForApplication(String appName) {
+            // Get all metrics
+            List< MetricData > allMetrics = metricRepository.findAll();
+            
+            // Filter by application name (stored in labels)
+            return allMetrics.stream()
+                .filter(metric -> appName.equals(metric.getTags().get("application")))
+                .collect(Collectors.toList());
+        }
+
+        /**
+         * Get latest metrics for a specific application
+         */
+        public Map<String, MetricData> getLatestMetricsForApplication(String appName) {
+            Map<String, MetricData> result = new HashMap<>();
+            
+            // Get all metrics for the application
+            List< MetricData > appMetrics = getMetricsForApplication(appName);
+            
+            // Group by resource ID and metric name, keeping only the latest
+            Map<String, Map<String, MetricData>> byResource = new HashMap<>();
+            
+            for (MetricData metric : appMetrics) {
+                String resourceId = metric.getTags().get("host");
+                String metricName = metric.getMetricName();
+                String key = resourceId + ":" + metricName;
+                
+                if (!result.containsKey(key) || 
+                    result.get(key).getTimestamp().isBefore(metric.getTimestamp())) {
+                    result.put(key, metric);
+                }
+            }
+            
+            return result;
+        }
+
+        /**
+         * Get application health status (green, amber, critical)
+         */
+        public Map<String, Object> getApplicationHealthStatus(String appName) {
+            Map<String, Object> result = new HashMap<>();
+            Map<String, String> statusByMetric = new HashMap<>();
+            String overallStatus = "green";
+            
+            // Get latest metrics for the application
+            Map<String, MetricData> latestMetrics = getLatestMetricsForApplication(appName);
+            
+            // Process all metrics for this application
+            for (MetricData metric : latestMetrics.values()) {
+                String metricName = metric.getMetricName();
+                Double value = metric.getValue();
+                
+                // Get thresholds from labels
+                Double warningThreshold = null;
+                Double criticalThreshold = null;
+                
+                if (metric.getTags().containsKey("warning_threshold")) {
+                    warningThreshold = Double.parseDouble(metric.getTags().get("warning_threshold"));
+                }
+                
+                if (metric.getTags().containsKey("critical_threshold")) {
+                    criticalThreshold = Double.parseDouble(metric.getTags().get("critical_threshold"));
+                }
+                
+                // Use default thresholds if not available in labels
+                if (warningThreshold == null) {
+                    if ("CPU Usage".equals(metricName)) warningThreshold = 80.0;
+                    else if ("Memory Usage".equals(metricName)) warningThreshold = 80.0;
+                    else if ("Disk Usage on /".equals(metricName)) warningThreshold = 70.0;
+                    else warningThreshold = 80.0; // Default
+                }
+                
+                if (criticalThreshold == null) {
+                    if ("CPU Usage".equals(metricName)) criticalThreshold = 95.0;
+                    else if ("Memory Usage".equals(metricName)) criticalThreshold = 95.0;
+                    else if ("Disk Usage on /".equals(metricName)) criticalThreshold = 90.0;
+                    else criticalThreshold = 95.0; // Default
+                }
+                
+                // Evaluate status based on thresholds
+                String status = evaluateStatus(value, warningThreshold, criticalThreshold);
+                statusByMetric.put(metricName, status);
+                
+                // Update overall status (worst case wins)
+                overallStatus = worseStatus(overallStatus, status);
+            }
+            
+            // Build result
+            result.put("application", appName);
+            result.put("overallStatus", overallStatus);
+            result.put("metrics", statusByMetric);
+            result.put("timestamp", Instant.now());
+            
+            return result;
+        }
+
+        /**
+         * Evaluate status based on value and thresholds
+         */
+        private String evaluateStatus(Double value, Double warningThreshold, Double criticalThreshold) {
+            if (value >= criticalThreshold) return "critical";
+            if (value >= warningThreshold) return "amber";
+            return "green";
+        }
+
+        /**
+         * Return the worse of two statuses
+         */
+        private String worseStatus(String status1, String status2) {
+            if ("critical".equals(status1) || "critical".equals(status2)) return "critical";
+            if ("amber".equals(status1) || "amber".equals(status2)) return "amber";
+            return "green";
+        }
 
 
 }
